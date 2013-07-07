@@ -132,7 +132,7 @@ void tripodGait(){
           
     if( (abs(commanderInput.Xspeed) > 5) || (abs(commanderInput.Yspeed) > 5) || (abs(commanderInput.Rspeed) > 5 ) ){
                              
-        duration = 800;                               //duration of one step cycle (ms)      
+        duration = 600;                               //duration of one step cycle (ms)      
         numTicks = duration / SERVO_UPDATE_PERIOD / 4; //total ticks divided into the four cases   
               
         speedX = 180*commanderInput.Xspeed/127;        //200mm/s top speed
@@ -161,26 +161,26 @@ void tripodGait(){
             
                 case 1: //forward raise
                                       
-                    leg[legNum].footPos.x = ((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/1000 - (speedX + strideRotOffsetX[legNum])/4; 
-                    leg[legNum].footPos.y = ((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/1000 - (speedY + strideRotOffsetY[legNum])/4;
-                    leg[legNum].footPos.z = (height*tick)/numTicks;
+                    leg[legNum].footPos.x = ((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/duration - (speedX + strideRotOffsetX[legNum])/4; 
+                    leg[legNum].footPos.y = ((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/duration - (speedY + strideRotOffsetY[legNum])/4;
+                    leg[legNum].footPos.z = ((long)height*tick*SERVO_UPDATE_PERIOD)/(duration/4);
                         
                     if( tick >= numTicks-1 ) caseStep[legNum] = 2;
                     break;
                     
                 case 2: // forward lower
                 
-                    leg[legNum].footPos.x = ((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/1000;
-                    leg[legNum].footPos.y = ((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/1000;
-                    leg[legNum].footPos.z = height - (height*tick)/numTicks ;
+                    leg[legNum].footPos.x = ((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/duration;
+                    leg[legNum].footPos.y = ((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/duration;
+                    leg[legNum].footPos.z = height - ((long)height*tick*SERVO_UPDATE_PERIOD)/(duration/4);
                      
                     if( tick >= numTicks-1 ) caseStep[legNum] = 3;
                     break;
                   
                 case 3: // down pull back
                 
-                    leg[legNum].footPos.x = -((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/1000 + (speedX + strideRotOffsetX[legNum])/4;
-                    leg[legNum].footPos.y = -((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/1000 + (speedY + strideRotOffsetY[legNum])/4;
+                    leg[legNum].footPos.x = -((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/duration + (speedX + strideRotOffsetX[legNum])/4;
+                    leg[legNum].footPos.y = -((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/duration + (speedY + strideRotOffsetY[legNum])/4;
                     leg[legNum].footPos.z = 0;
                         
                     if( tick >= numTicks-1 ) caseStep[legNum] = 4;
@@ -188,8 +188,8 @@ void tripodGait(){
                     
                 case 4: // down pull back
                     
-                    leg[legNum].footPos.x = -((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/1000;
-                    leg[legNum].footPos.y = -((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/1000;
+                    leg[legNum].footPos.x = -((long)(speedX + strideRotOffsetX[legNum])*tick*SERVO_UPDATE_PERIOD)/duration;
+                    leg[legNum].footPos.y = -((long)(speedY + strideRotOffsetY[legNum])*tick*SERVO_UPDATE_PERIOD)/duration;
                     leg[legNum].footPos.z = 0;
     
                     if( tick >= numTicks-1 ) caseStep[legNum] = 1;
